@@ -96,3 +96,4 @@ gh repo create react-giphy
 git push origin master
 yarn deploy
 ```
+# react-giphy
