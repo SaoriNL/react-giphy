@@ -1,23 +1,40 @@
-import React, { useState } from 'react'; // use === Hook
-import Gif from './Gif';
+import React, { useState } from 'react';
+
 import SearchBar from './SearchBar';
 import GifList from './GifList';
+import Gif from './Gif';
+
+const giphy = require('giphy-api')({
+  apiKey: 'KsltJNEs1v3QDDVlinP6EFo2GqjFxgRR',
+  https: true
+});
 
 const App = () => {
-  const [selectedID, setSelectedID] = useState("LmNwrBhejkK9EFP504");
-  const [gifIDs, setGifIDs] = useState(["LmNwrBhejkK9EFP504", "PnpkimJ5mrZRe", "5ntdy5Ban1dIY"])
-  // const selectedID = "LmNwrBhejkK9EFP504";
-  // const gifIDs = ["LmNwrBhejkK9EFP504", "PnpkimJ5mrZRe", "5ntdy5Ban1dIY"];
+  const [gifIdSelected, setGifIdSelected] = useState("WuGSL4LFUMQU");
+  const [giIdList, setGiIdList] = useState(["WuGSL4LFUMQU", "HuVCpmfKheI2Q", "u6uAu3yyDNqRq"]);
+  const fetchGiphy = (keyword) => {
+    giphy.search({
+      q: keyword,
+      rating: 'g',
+      limit: 10
+    }, (err, res) => {
+      setGiIdList(res.data.map((gif) => gif.id));
+    });
+  };
+  const changeSelectGif = (newSelectedGifId) => {
+    setGifIdSelected(newSelectedGifId);
+  };
+
   return (
     <div>
       <div className="left-scene">
-        <SearchBar />
+        <SearchBar fetchGiphy={fetchGiphy} />
         <div className="selected-gif">
-          <Gif gifID={selectedID} />
+          <Gif gifId={gifIdSelected} />
         </div>
       </div>
       <div className="right-scene">
-        <GifList gifIDs={gifIDs} />
+        <GifList gifIdList={giIdList} changeSelectGif={changeSelectGif} />
       </div>
     </div>
   );
